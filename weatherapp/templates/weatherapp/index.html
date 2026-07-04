@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Weather Pro</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- Digital Clock -->
+        <div class="header-info">
+            <h2 id="clock">00:00:00</h2>
+            <p>{{ day }}</p>
+        </div>
+
+        <h1>World Weather</h1>
+
+        <!-- Search Box with Autocomplete -->
+        <form method="POST" class="search-box">
+            {% csrf_token %}
+            <input type="text" name="city" list="city-suggestions" placeholder="Search City (e.g. London, PK)" required autocomplete="off">
+            
+            <!-- This datalist provides the automatic suggestions -->
+            <datalist id="city-suggestions">
+                <!-- Pakistan -->
+                <option value="Islamabad, PK">
+                <option value="Karachi, PK">
+                <option value="Lahore, PK">
+                <option value="Peshawar, PK">
+                <option value="Mingora, PK">
+                <option value="Multan, PK">
+                <option value="Quetta, PK">
+                <option value="Swat, PK">
+                <!-- Global Cities -->
+                <option value="London, GB">
+                <option value="New York, US">
+                <option value="Dubai, AE">
+                <option value="Tokyo, JP">
+                <option value="Paris, FR">
+                <option value="Istanbul, TR">
+                <option value="Riyadh, SA">
+                <option value="Berlin, DE">
+                <option value="Moscow, RU">
+                <option value="Beijing, CN">
+                <option value="Sydney, AU">
+                <option value="Toronto, CA">
+                <option value="Mumbai, IN">
+            </datalist>
+
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% elif temp %}
+            <div class="weather-card">
+                <div class="main-weather">
+                    <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="icon">
+                    <h2 class="temp">{{ temp }}°C</h2>
+                    <h3 class="location">{{ city }}, {{ country }}</h3>
+                    <p class="desc">{{ description|title }}</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <small>Humidity</small>
+                        <p>{{ humidity }}%</p>
+                    </div>
+                    <div class="stat-item">
+                        <small>Wind Speed</small>
+                        <p>{{ wind_speed }} km/h</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
